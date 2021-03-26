@@ -40,7 +40,6 @@ public class WorkerService {
         Worker worker = new Worker();
         worker.setName(workerDto.getName());
         worker.setPhoneNumber(workerDto.getPhoneNumber());
-        worker.setAddress(optionalAddress.get());
         worker.setDepartment(optionalDepartment.get());
         workerRepository.save(worker);
         return new ApiResponse("Saved", true);
@@ -63,10 +62,6 @@ public class WorkerService {
         if (!optionalWorker.isPresent())
             return new ApiResponse("Worker not found", false);
 
-        Optional<Address> optionalAddress = addressRepository.findById(workerDto.getAddressId());
-        if (!optionalAddress.isPresent())
-            return new ApiResponse("Address not found", false);
-
         Optional<Department> optionalDepartment = departmentRepository.findById(workerDto.getDepartmentId());
         if (!optionalDepartment.isPresent())
             return new ApiResponse("Department not found", false);
@@ -77,9 +72,13 @@ public class WorkerService {
         Worker worker = optionalWorker.get();
         worker.setName(workerDto.getName());
         worker.setPhoneNumber(workerDto.getPhoneNumber());
-        worker.setAddress(optionalAddress.get());
         worker.setDepartment(optionalDepartment.get());
         workerRepository.save(worker);
+
+        Optional<Address> optionalAddress = addressRepository.findById(workerDto.getAddressId());
+        Address address = optionalAddress.get();
+        address.setStreet(workerDto.getStreet());
+        address.setHomeNumber(workerDto.getHomeNumber());
         return new ApiResponse("Edited", true);
     }
 
