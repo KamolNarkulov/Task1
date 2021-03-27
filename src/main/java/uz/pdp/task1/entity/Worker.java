@@ -20,6 +20,9 @@ public class Worker {
 
     @Column(unique = true, nullable = false)
     private String phoneNumber;
+    
+    @OneToOne
+    private Address address;
 
     @ManyToOne
     private Department department;
